@@ -1,0 +1,11 @@
+{
+  "expo": {
+    "name": "AquaMates",
+    "slug": "aquamates-web",
+    "scheme": "aquamates",
+    "version": "1.0.0",
+    "plugins": ["expo-router", "expo-font"],
+    "web": { "bundler": "metro", "output": "static", "favicon": "./assets/icon.png" },
+    "icon": "./assets/icon.png"
+  }
+}
