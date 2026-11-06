@@ -6,16 +6,17 @@ import { Text } from 'react-native';
 import { SessionProvider, useSession } from './hooks/useSession';
 
 type Listener = (event: string, session: unknown) => void;
-const mockState: { listener: Listener | null; session: unknown; signOut: jest.Mock } = {
+const mockState: { listener: Listener | null; session: unknown; signOut: jest.Mock; getSession: () => Promise<unknown> } = {
   listener: null,
   session: null,
   signOut: jest.fn(),
+  getSession: () => Promise.resolve({ data: { session: mockState.session } }),
 };
 
 jest.mock('@/shared/supabase', () => ({
   supabase: {
     auth: {
-      getSession: () => Promise.resolve({ data: { session: mockState.session } }),
+      getSession: () => mockState.getSession(),
       onAuthStateChange: (cb: Listener) => {
         mockState.listener = cb;
         return { data: { subscription: { unsubscribe: jest.fn() } } };
@@ -48,6 +49,7 @@ const status = () => screen.getByTestId('status').props.children;
 
 beforeEach(() => {
   mockState.session = null;
+  mockState.getSession = () => Promise.resolve({ data: { session: mockState.session } });
   mockState.signOut = jest.fn().mockResolvedValue({ error: null });
 });
 
@@ -99,4 +101,38 @@ test('a SIGNED_OUT the app did not start means the session expired', async () =>
   await act(async () => {});
   await act(async () => mockState.listener!('SIGNED_OUT', null));
   expect(status()).toBe('signedOut:expired');
+});
+
+describe('bounded initial session check', () => {
+  beforeEach(() => jest.useFakeTimers());
+  afterEach(() => jest.useRealTimers());
+
+  test('a rejected getSession resolves to signed out', async () => {
+    mockState.getSession = () => Promise.reject(new Error('network'));
+    await setup();
+    await act(async () => {});
+    expect(status()).toBe('signedOut:');
+  });
+
+  test('a hung getSession resolves to signed out after the timeout', async () => {
+    mockState.getSession = () => new Promise(() => {});
+    await setup();
+    expect(status()).toBe('loading:');
+    await act(async () => {
+      jest.advanceTimersByTime(5000);
+    });
+    expect(status()).toBe('signedOut:');
+  });
+
+  test('a late session after the timeout switches to signed in', async () => {
+    let resolve!: (v: unknown) => void;
+    mockState.getSession = () => new Promise((r) => (resolve = r));
+    await setup();
+    await act(async () => {
+      jest.advanceTimersByTime(5000);
+    });
+    expect(status()).toBe('signedOut:');
+    await act(async () => resolve({ data: { session: { user: { id: 'u1' } } } }));
+    expect(status()).toBe('signedIn:');
+  });
 });
