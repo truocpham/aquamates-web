@@ -22,6 +22,23 @@ export async function signInWithMagicLink(email: string): Promise<void> {
   if (error) throw new Error(t('signIn.magicLink.error'));
 }
 
+export async function clubExists(): Promise<boolean> {
+  const { data, error } = await supabase.rpc('club_exists');
+  if (error) throw new Error(t('error.club'));
+  return !!data;
+}
+
+// These throw the raw RPC error so callers can parseRpcError it.
+export async function bootstrapClub(code: string): Promise<void> {
+  const { error } = await supabase.rpc('bootstrap_club', { code });
+  if (error) throw error;
+}
+
+export async function joinClub(code: string): Promise<void> {
+  const { error } = await supabase.rpc('join_club', { code });
+  if (error) throw error;
+}
+
 export async function getMembership(): Promise<Membership> {
   const { data, error } = await supabase.rpc('my_membership');
   if (error) throw new Error(t('error.membership'));
