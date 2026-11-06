@@ -50,9 +50,9 @@ jobs:
       - run: npm ci
       - run: npm run build
         env:
-          # Public values (the anon key is safe in a browser); placeholders keep the build green until the variables are set.
-          EXPO_PUBLIC_SUPABASE_URL: ${{ vars.EXPO_PUBLIC_SUPABASE_URL || 'https://placeholder.supabase.co' }}
-          EXPO_PUBLIC_SUPABASE_ANON_KEY: ${{ vars.EXPO_PUBLIC_SUPABASE_ANON_KEY || 'placeholder-anon-key' }}
+          # Placeholders keep the build green for fork PRs, which cannot read secrets.
+          EXPO_PUBLIC_SUPABASE_URL: ${{ secrets.SUPABASE_URL || 'https://placeholder.supabase.co' }}
+          EXPO_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY || 'placeholder-anon-key' }}
       - uses: actions/upload-artifact@v4
         with:
           name: dist

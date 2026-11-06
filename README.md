@@ -43,4 +43,4 @@ Redirect targets are defined in one place, `src/shared/authRedirect.ts` (local `
 - `https://*.aquamates-web.pages.dev/auth-callback`
 - `https://aquamates-web.pages.dev/auth-callback`
 
-Also set the Site URL to the production URL, enable the Facebook provider, and add the repository variables `EXPO_PUBLIC_SUPABASE_URL` and `EXPO_PUBLIC_SUPABASE_ANON_KEY` (Settings > Secrets and variables > Actions > Variables). They are public client values, never the service-role key. Locally, copy `.env.example` to `.env`.
+Also set the Site URL to the production URL, enable the Facebook provider, and make sure the repository secrets `SUPABASE_URL` and `SUPABASE_ANON_KEY` exist. The workflows pass them to the build as `EXPO_PUBLIC_SUPABASE_URL` and `EXPO_PUBLIC_SUPABASE_ANON_KEY`; deploy fails if they are empty, while CI and previews fall back to placeholders (fork PRs cannot read secrets). Never use the service-role key. Locally, copy `.env.example` to `.env`.
