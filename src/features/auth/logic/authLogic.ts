@@ -9,6 +9,18 @@ export function reasonMessage(reason: string | undefined): string | null {
   return reason && SIGN_IN_REASONS.includes(reason) ? t(`signIn.reason.${reason as SignInReason}`) : null;
 }
 
+export const MIN_CODE_LENGTH = 6;
+
+export type RpcError = 'club_exists' | 'bad_code' | 'removed' | 'last_admin' | 'bad_name' | 'unknown';
+
+/** Maps a supabase RPC error (P0001, code in trailing parentheses) to a known reason. */
+export function parseRpcError(e: unknown): RpcError {
+  const { code, message } = (e ?? {}) as { code?: string; message?: string };
+  if (code !== 'P0001') return 'unknown';
+  const m = /\((\w+)\)\s*$/.exec(message ?? '')?.[1];
+  return m === 'club_exists' || m === 'bad_code' || m === 'removed' || m === 'last_admin' || m === 'bad_name' ? m : 'unknown';
+}
+
 /** Trimmed email when it looks like one, else null. */
 export function validEmail(input: string): string | null {
   const email = input.trim();
