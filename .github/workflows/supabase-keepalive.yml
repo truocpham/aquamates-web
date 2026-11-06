@@ -1,0 +1,36 @@
+name: Supabase keep-alive
+
+on:
+  schedule:
+    - cron: "17 6 * * 1" # weekly, Monday 06:17 UTC
+  workflow_dispatch:
+
+permissions: {}
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Ping Supabase REST endpoint
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
+        run: |
+          if [ -z "$SUPABASE_URL" ] || [ -z "$SUPABASE_ANON_KEY" ]; then
+            echo "::error::SUPABASE_URL and SUPABASE_ANON_KEY secrets must be set"
+            exit 1
+          fi
+          status=$(curl --silent --show-error --max-time 30 --retry 2 \
+            --output /dev/null --write-out '%{http_code}' \
+            -H "apikey: $SUPABASE_ANON_KEY" \
+            -H "Authorization: Bearer $SUPABASE_ANON_KEY" \
+            "${SUPABASE_URL%/}/rest/v1/") || {
+            echo "::error::Request to Supabase failed"
+            exit 1
+          }
+          echo "HTTP status: $status"
+          if [ "$status" -lt 200 ] || [ "$status" -ge 300 ]; then
+            echo "::error::Supabase keep-alive returned HTTP $status"
+            exit 1
+          fi
