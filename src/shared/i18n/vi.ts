@@ -22,6 +22,16 @@ export const vi: Record<keyof typeof en, string> = {
   'signIn.signOut': 'Đăng xuất',
   'signIn.completing': 'Đang đăng nhập...',
 
+  'landing.title': 'Câu lạc bộ của bạn, gọn gàng hơn.',
+  'landing.subtitle': 'Lên kế hoạch buổi bơi và buổi tụ tập, theo dõi ai tham gia và chia chi phí cùng anh em.',
+  'landing.cta': 'Đăng nhập',
+  'landing.feature.events.title': 'Sự kiện',
+  'landing.feature.events.body': 'Tạo buổi bơi, buổi tụ tập và xem ai đã đăng ký.',
+  'landing.feature.expenses.title': 'Chi phí',
+  'landing.feature.expenses.body': 'Ghi lại khoản chi và chia sẻ mã QR ngân hàng để mọi người thanh toán.',
+  'landing.feature.history.title': 'Lịch sử',
+  'landing.feature.history.body': 'Xem lại các sự kiện đã qua và tình hình của câu lạc bộ.',
+
   'common.cancel': 'Huỷ',
   'common.confirm': 'Xác nhận',
   'common.retry': 'Thử lại',

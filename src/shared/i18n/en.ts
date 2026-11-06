@@ -20,6 +20,16 @@ export const en = {
   'signIn.signOut': 'Sign out',
   'signIn.completing': 'Signing you in...',
 
+  'landing.title': 'Your club, organised.',
+  'landing.subtitle': 'Plan swim sessions and social nights, track who is coming and split the costs with your mates.',
+  'landing.cta': 'Sign in',
+  'landing.feature.events.title': 'Events',
+  'landing.feature.events.body': 'Create swims and social nights and see who has said yes.',
+  'landing.feature.expenses.title': 'Expenses',
+  'landing.feature.expenses.body': 'Log what was spent and share the bank QR so everyone can settle up.',
+  'landing.feature.history.title': 'History',
+  'landing.feature.history.body': 'Look back at past events and see how the club is doing.',
+
   'common.cancel': 'Cancel',
   'common.confirm': 'Confirm',
   'common.retry': 'Retry',
