@@ -6,8 +6,8 @@ import { useSession } from '../hooks/useSession';
 import { gateRedirect, gateTarget } from '../logic/authLogic';
 
 const AUTH_ROUTES = ['/sign-in', '/auth-callback'];
-/** Routes a signed-out visitor may stay on (e.g. the landing page at '/'). Empty for now: add them here. */
-const PUBLIC_ROUTES: string[] = [];
+/** Routes a signed-out visitor may stay on: the landing page at '/'. Every other route redirects to sign-in. */
+export const PUBLIC_ROUTES: string[] = ['/'];
 
 /** Sends signed-out users to sign-in, and signed-in users to home or the club code screen. */
 export function AuthGate({ children }: { children: ReactNode }) {
