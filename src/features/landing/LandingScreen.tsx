@@ -35,7 +35,7 @@ export function LandingScreen() {
         </View>
       </View>
       <WaveDivider />
-      <View style={{ backgroundColor: colors.raised, alignItems: 'center', paddingBottom: spacing.xl }}>
+      <View style={{ flexGrow: 1, backgroundColor: colors.raised, alignItems: 'center', paddingBottom: spacing.xl }}>
         <View
           style={{ width: '100%', maxWidth: MAX_WIDTH, padding: spacing.xl, flexDirection: 'row', flexWrap: 'wrap', gap: spacing.lg }}
         >

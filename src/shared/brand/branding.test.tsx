@@ -1,42 +1,28 @@
 import { render, screen } from '@testing-library/react-native';
-import { useWindowDimensions } from 'react-native';
+import { readFileSync } from 'node:fs';
+import { join } from 'node:path';
 
 import { LandingScreen } from '@/features/landing/LandingScreen';
 import { en } from '@/shared/i18n/en';
 import { vi } from '@/shared/i18n/vi';
 
-import { TopBar } from './TopBar';
+import { TopBar, WORDMARK_MIN_WIDTH } from './TopBar';
 
 jest.mock('expo-router', () => ({ useRouter: () => ({ push: jest.fn() }) }));
-jest.mock('react-native/Libraries/Utilities/useWindowDimensions', () => ({
-  __esModule: true,
-  default: jest.fn(),
-}));
 
-const setWidth = (width: number) => (useWindowDimensions as jest.Mock).mockReturnValue({ width, height: 800, scale: 1, fontScale: 1 });
-
-test('top bar shows the mark alone at 375 and 767', async () => {
-  for (const w of [375, 767]) {
-    setWidth(w);
-    const { unmount } = await render(<TopBar />);
-    expect(screen.getByLabelText('T-MEN')).toBeTruthy();
-    expect(screen.queryByTestId('top-bar-wordmark')).toBeNull();
-    await unmount();
-  }
+test('top bar always renders the mark and the wordmark, so prerender and first client render match', async () => {
+  await render(<TopBar />);
+  expect(screen.getByLabelText('T-MEN')).toBeTruthy();
+  expect(screen.getByTestId('top-bar-wordmark')).toBeTruthy();
 });
 
-test('top bar adds the wordmark at 768 and 1280', async () => {
-  for (const w of [768, 1280]) {
-    setWidth(w);
-    const { unmount } = await render(<TopBar />);
-    expect(screen.getByLabelText('T-MEN')).toBeTruthy();
-    expect(screen.getByTestId('top-bar-wordmark')).toBeTruthy();
-    await unmount();
-  }
+test('the page template hides the wordmark below 768 px with a media query', () => {
+  const html = readFileSync(join(__dirname, '../../../app/+html.tsx'), 'utf8');
+  expect(WORDMARK_MIN_WIDTH).toBe(768);
+  expect(html).toContain('@media (max-width:767px){html [data-testid="top-bar-wordmark"]{display:none}}');
 });
 
 test('landing shows the tagline, full logo, wave dividers and footer', async () => {
-  setWidth(375);
   await render(<LandingScreen />);
   expect(screen.getByText('Swim together, beer forever')).toBeTruthy();
   expect(screen.getAllByLabelText('T-MEN').length).toBe(2); // top bar mark and hero logo

@@ -1,5 +1,5 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useState, type ReactNode } from 'react';
-import { useColorScheme } from 'react-native';
+import { Platform, useColorScheme } from 'react-native';
 
 import { secureStoreAdapter } from '../secureStorage';
 import { THEME_STORAGE_KEY, resolveScheme, themes, type ThemeChoice, type ThemeColors, type ThemeScheme } from './theme';
@@ -50,7 +50,8 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const value = useMemo<Theme>(() => {
-    const scheme = resolveScheme(choice, phone);
+    // On web the prerendered HTML is light, so hydrate as light and switch once the saved choice is read; React keeps mismatched attributes.
+    const scheme = Platform.OS === 'web' && !ready ? 'light' : resolveScheme(choice, phone);
     return { colors: themes[scheme], scheme, choice, ready, setChoice };
   }, [choice, phone, ready, setChoice]);
 
