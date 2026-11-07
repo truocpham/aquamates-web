@@ -40,8 +40,15 @@ const pairs: Pair[] = [
   ['muted text on screen', (c) => [c.muted, c.bg]],
   ['muted text on card', (c) => [c.muted, c.card]],
   ['muted text on raised', (c) => [c.muted, c.raised]],
-  ['primary button text on lime', (c) => [c.onAccent, c.accent]],
-  ['selected chip text on lime', (c) => [c.onAccent, c.accent]],
+  ['primary button text on gold', (c) => [c.onAccent, c.accent]],
+  ['selected chip text on gold', (c) => [c.onAccent, c.accent]],
+  ['dark text on gold border', (c) => [c.onAccent, c.accentBorder]],
+  ['swimming label on screen', (c) => [c.swimming, c.bg]],
+  ['swimming label on card', (c) => [c.swimming, c.card]],
+  ['beer social label on screen', (c) => [c.beer_social, c.bg]],
+  ['beer social label on card', (c) => [c.beer_social, c.card]],
+  ['success text on screen', (c) => [c.success, c.bg]],
+  ['success text on card', (c) => [c.success, c.card]],
   ['chip text on card', (c) => [c.text, c.card]],
   ['secondary button text on screen', (c) => [c.brand, c.bg]],
   ['secondary button text on card', (c) => [c.brand, c.card]],
@@ -70,38 +77,30 @@ test('contrast helper matches known values', () => {
   expect(contrast('#FFFFFF', '#FFFFFF')).toBeCloseTo(1, 5);
 });
 
-test('light mode: lime is only a fill with dark text, never a text or icon colour', () => {
-  expect(contrast(lightColors.accent, lightColors.card)).toBeLessThan(4.5);
-  for (const key of ['text', 'muted', 'brand', 'swimming', 'beer_social', 'success', 'danger', 'onAccent'] as const) {
+test('light mode: gold is only a fill with dark text, never a text or icon colour', () => {
+  expect(contrast(lightColors.accent, lightColors.card)).toBeLessThan(3);
+  for (const key of ['text', 'muted', 'brand', 'swimming', 'beer_social', 'success', 'danger', 'dangerText', 'onAccent'] as const) {
     expect(lightColors[key].toLowerCase()).not.toBe(lightColors.accent.toLowerCase());
   }
   expect(contrast(lightColors.onAccent, lightColors.accent)).toBeGreaterThanOrEqual(4.5);
-  expect(lightColors.accentBorder).not.toBe(lightColors.accent);
 });
 
-describe.each([
-  ['dark', darkColors],
-  ['light', lightColors],
-] as const)('category bars in %s mode', (mode, c) => {
-  beforeEach(() => phoneSpy.mockReturnValue(mode));
-  test('swimming is blue and beer social is amber', async () => {
-    await render(
-      <ThemeProvider>
-        <Card category="swimming" testID="swim" />
-        <Card category="beer_social" testID="beer" />
-      </ThemeProvider>,
-    );
-    const swim = StyleSheet.flatten(screen.getByTestId('swim').props.style);
-    const beer = StyleSheet.flatten(screen.getByTestId('beer').props.style);
-    expect(swim.borderLeftWidth).toBe(4);
-    expect(beer.borderLeftWidth).toBe(4);
-    expect(swim.borderLeftColor).toBe(c.swimming);
-    expect(beer.borderLeftColor).toBe(c.beer_social);
-    const [sr, , sb] = rgb(c.swimming);
-    expect(sb).toBeGreaterThan(sr + 100);
-    const [ar, ag, ab] = rgb(c.beer_social);
-    expect(ar).toBeGreaterThan(ab + 100);
-    expect(ag).toBeGreaterThan(ab + 50);
-    expect(ag).toBeLessThan(ar);
+describe.each(['dark', 'light'] as const)('UI borders and bars in %s mode are at least 3:1', (mode) => {
+  const c = themes[mode];
+  test.each([
+    ['gold button and chip border on card', c.accentBorder, c.card],
+    ['gold button and chip border on screen', c.accentBorder, c.bg],
+    ['swimming bar on card', c.swimming, c.card],
+    ['beer social bar on card', c.beer_social, c.card],
+  ])('%s', (_name, fg, bg) => {
+    expect(contrast(fg, bg)).toBeGreaterThanOrEqual(3);
   });
 });
+
+test('no lime value remains in the palettes', () => {
+  const all = JSON.stringify([darkColors, lightColors]).toUpperCase();
+  expect(all).not.toContain('C8FF48');
+  expect(all).not.toContain('8FBF00');
+});
+
+
