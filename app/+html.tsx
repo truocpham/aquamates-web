@@ -4,10 +4,12 @@ import type { ReactNode } from 'react';
 import { PRE_HYDRATION_SCRIPT } from '@/shared/preHydration';
 import { darkColors, lightColors } from '@/shared/ui/theme';
 
-const HIDE_LANDING_FOR_MEMBERS = `
-html[data-has-session]{background-color:#F4F7FB}
-html[data-has-session] [data-testid="landing"]{display:none}
-@media (prefers-color-scheme:dark){html[data-has-session]{background-color:#0B0F17}}`;
+const PAGE_BACKGROUND = `
+html{background-color:${lightColors.bg}}
+@media (prefers-color-scheme:dark){html{background-color:${darkColors.bg}}}
+html[data-theme=light]{background-color:${lightColors.bg}}
+html[data-theme=dark]{background-color:${darkColors.bg}}
+html[data-has-session] [data-testid="landing"]{display:none}`;
 
 /** Static HTML template: the signed-out landing is prerendered into it; the inline script runs before first paint. */
 export default function Root({ children }: { children: ReactNode }) {
@@ -26,7 +28,7 @@ export default function Root({ children }: { children: ReactNode }) {
         <meta name="theme-color" content={darkColors.bg} media="(prefers-color-scheme: dark)" />
         <meta name="description" content="Plan swim sessions and social nights, track who is coming and split the costs with your club." />
         <ScrollViewStyleReset />
-        <style dangerouslySetInnerHTML={{ __html: HIDE_LANDING_FOR_MEMBERS }} />
+        <style dangerouslySetInnerHTML={{ __html: PAGE_BACKGROUND }} />
         <script dangerouslySetInnerHTML={{ __html: PRE_HYDRATION_SCRIPT }} />
         {headNodes}
       </head>

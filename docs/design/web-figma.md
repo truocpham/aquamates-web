@@ -2,7 +2,7 @@
 
 Figma file: https://www.figma.com/design/DCrItU9GH6Y9SLvRfMgmmt
 
-The file has three pages: Tokens, Landing & Auth, App screens. Every screen is drawn at phone (375 px), tablet (768 px) and desktop (1280 px). Colours are Figma variables taken from the mobile theme (`aquamates` repo, `src/shared/ui/theme.ts`). Every UI ticket builds from this file and these tokens.
+The file has three pages: Tokens, Landing & Auth, App screens. Every screen is drawn at phone (375 px), tablet (768 px) and desktop (1280 px). Colours are Figma variables that mirror `src/shared/ui/theme.ts`. Every UI ticket builds from this file and these tokens.
 
 ## Screens
 
@@ -25,27 +25,29 @@ Each frame is named `<Screen> / <width>` in the file. The dark reference frame i
 
 ## Tokens
 
-Same values as the mobile theme. Font: Plus Jakarta Sans 400, 600, 700.
+T-MEN palette from `docs/specs/t-men-brand.md`: warm cream light theme, deep teal-navy dark theme, gold actions. Font: Plus Jakarta Sans 400, 600, 700. Tagline: "Swim together, beer forever". Primary buttons and selected chips are gold with dark text in both themes; lime is removed. Values below are the tuned ones in `src/shared/ui/theme.ts` (checked at WCAG AA by the contrast test).
 
 ### Colours
 
 | Token | Light | Dark |
 |---|---|---|
-| bg | `#F4F7FB` | `#0B0F17` |
-| card | `#FFFFFF` | `#121823` |
-| raised | `#EAF0F7` | `#1A212E` |
-| border | `#D5DEE9` | `#2A2F3A` |
-| text | `#0B0F17` | `#FFFFFF` |
-| muted | `#5B6778` | `#9AA3B2` |
-| brand | `#0070B8` | `#00A0FF` |
-| accent | `#C8FF48` | `#C8FF48` |
-| accentBorder | `#8FBF00` | `#C8FF48` |
-| onAccent | `#0B0F17` | `#0B0F17` |
-| beerSocial | `#D98200` | `#FFB547` |
-| success | `#059669` | `#34D399` |
-| danger | `#D32F2F` | `#FF6B6B` |
+| bg | `#FBF8E5` | `#071820` |
+| card | `#FFFFFF` | `#0D2430` |
+| raised | `#F3EEDB` | `#143240` |
+| border | `#E3DBC0` | `#234656` |
+| text | `#0B1B24` | `#F4FAFB` |
+| muted | `#54626B` | `#9DB8C4` |
+| brand (links, active tab) | `#1665B2` | `#5AA9F0` |
+| accent (gold fill) | `#FAC618` | `#FAC618` |
+| accentBorder | `#A57C00` | `#FAC618` |
+| onAccent (text on gold) | `#0B1B24` | `#0B1B24` |
+| swimming | `#1665B2` | `#5AA9F0` |
+| beerSocial | `#9A6400` | `#FAC618` |
+| success | `#047857` | `#34D399` |
+| danger | `#C62828` | `#FF6B6B` |
+| dangerText | `#B71C1C` | `#FF6B6B` |
 
-The mobile theme also has `swimming` (same as `brand`) and `dangerText` (light `#C62828`, dark `#FF6B6B`, used for danger text on any surface). They follow the mobile values.
+Gold is never text on cream. The wordmark teal is `#097C99` (light). Swimming is blue and beer social is gold wherever event categories show.
 
 ### Type scale (Plus Jakarta Sans)
 
