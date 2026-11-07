@@ -52,46 +52,46 @@ describe('resolveScheme: choice crossed with phone setting', () => {
 });
 
 test('token sets hold the spec values', () => {
-  expect(darkColors).toMatchObject({ bg: '#0B0F17', card: '#121823', raised: '#1A212E', brand: '#00A0FF', accent: '#C8FF48', onAccent: '#0B0F17' });
-  expect(lightColors).toMatchObject({ bg: '#F4F7FB', card: '#FFFFFF', brand: '#0070B8', accentBorder: '#8FBF00', danger: '#D32F2F' });
+  expect(darkColors).toMatchObject({ bg: '#071820', card: '#0D2430', raised: '#143240', brand: '#5AA9F0', accent: '#FAC618', onAccent: '#0B1B24' });
+  expect(lightColors).toMatchObject({ bg: '#FBF8E5', card: '#FFFFFF', brand: '#1665B2', accent: '#FAC618', danger: '#C62828' });
 });
 
 describe('ThemeProvider', () => {
   test('with no saved choice a dark phone gives dark and a light phone gives light, and it follows changes', async () => {
     phoneSpy.mockReturnValue('dark');
     const view = await render(<ThemeProvider><Probe /></ThemeProvider>);
-    expect(await screen.findByText('dark:system:#0B0F17')).toBeTruthy();
+    expect(await screen.findByText('dark:system:#071820')).toBeTruthy();
     phoneSpy.mockReturnValue('light');
     await view.rerender(<ThemeProvider><Probe /></ThemeProvider>);
-    expect(await screen.findByText('light:system:#F4F7FB')).toBeTruthy();
+    expect(await screen.findByText('light:system:#FBF8E5')).toBeTruthy();
   });
 
   test('a saved choice overrides the phone', async () => {
     mockStore.set('aquamates.theme', 'dark');
     phoneSpy.mockReturnValue('light');
     await render(<ThemeProvider><Probe /></ThemeProvider>);
-    expect(await screen.findByText('dark:dark:#0B0F17')).toBeTruthy();
+    expect(await screen.findByText('dark:dark:#071820')).toBeTruthy();
   });
 
   test('setChoice applies at once and is saved so a restart keeps it', async () => {
     phoneSpy.mockReturnValue('dark');
     const first = await render(<ThemeProvider><Probe /></ThemeProvider>);
-    await screen.findByText('dark:system:#0B0F17');
+    await screen.findByText('dark:system:#071820');
     await act(async () => {
       await holder.api.setChoice('light');
     });
-    expect(await screen.findByText('light:light:#F4F7FB')).toBeTruthy();
+    expect(await screen.findByText('light:light:#FBF8E5')).toBeTruthy();
     expect(mockStore.get('aquamates.theme')).toBe('light');
     await first.unmount();
     await render(<ThemeProvider><Probe /></ThemeProvider>);
-    expect(await screen.findByText('light:light:#F4F7FB')).toBeTruthy();
+    expect(await screen.findByText('light:light:#FBF8E5')).toBeTruthy();
   });
 
   test('an unreadable saved value falls back to following the phone', async () => {
     mockStore.set('aquamates.theme', 'purple');
     phoneSpy.mockReturnValue('dark');
     await render(<ThemeProvider><Probe /></ThemeProvider>);
-    expect(await screen.findByText('dark:system:#0B0F17')).toBeTruthy();
+    expect(await screen.findByText('dark:system:#071820')).toBeTruthy();
   });
 });
 

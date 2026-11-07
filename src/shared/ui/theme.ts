@@ -18,7 +18,7 @@ export type ThemeColors = {
   muted: string;
   brand: string;
   accent: string;
-  /** Border of accent (lime) fills: lime on dark, olive on white. */
+  /** Border of gold fills: gold on dark, a darker gold on cream so it reaches 3:1. */
   accentBorder: string;
   onAccent: string;
   swimming: string;
@@ -30,39 +30,39 @@ export type ThemeColors = {
 };
 
 export const darkColors: ThemeColors = {
-  bg: '#0B0F17',
-  card: '#121823',
-  raised: '#1A212E',
-  border: '#2A2F3A',
-  text: '#FFFFFF',
-  muted: '#9AA3B2',
-  brand: '#00A0FF',
-  accent: '#C8FF48',
-  accentBorder: '#C8FF48',
-  onAccent: '#0B0F17',
-  swimming: '#00A0FF',
-  beer_social: '#FFB547',
+  bg: '#071820',
+  card: '#0D2430',
+  raised: '#143240',
+  border: '#234656',
+  text: '#F4FAFB',
+  muted: '#9DB8C4',
+  brand: '#5AA9F0',
+  accent: '#FAC618',
+  accentBorder: '#FAC618',
+  onAccent: '#0B1B24',
+  swimming: '#5AA9F0',
+  beer_social: '#FAC618',
   success: '#34D399',
   danger: '#FF6B6B',
   dangerText: '#FF6B6B',
 };
 
 export const lightColors: ThemeColors = {
-  bg: '#F4F7FB',
+  bg: '#FBF8E5',
   card: '#FFFFFF',
-  raised: '#EAF0F7',
-  border: '#D5DEE9',
-  text: '#0B0F17',
-  muted: '#5B6778',
-  brand: '#0070B8',
-  accent: '#C8FF48',
-  accentBorder: '#8FBF00',
-  onAccent: '#0B0F17',
-  swimming: '#0070B8',
-  beer_social: '#D98200',
-  success: '#059669',
-  danger: '#D32F2F',
-  dangerText: '#C62828',
+  raised: '#F3EEDB',
+  border: '#E3DBC0',
+  text: '#0B1B24',
+  muted: '#54626B',
+  brand: '#1665B2',
+  accent: '#FAC618',
+  accentBorder: '#A57C00',
+  onAccent: '#0B1B24',
+  swimming: '#1665B2',
+  beer_social: '#9A6400',
+  success: '#047857',
+  danger: '#C62828',
+  dangerText: '#B71C1C',
 };
 
 export const themes: Record<ThemeScheme, ThemeColors> = { dark: darkColors, light: lightColors };
