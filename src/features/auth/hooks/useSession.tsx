@@ -2,7 +2,7 @@ import type { Session } from '@supabase/supabase-js';
 import { useQueryClient } from '@tanstack/react-query';
 import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
 
-import { supabase } from '@/shared/supabase';
+import { loadSupabase } from '@/shared/lazySupabase';
 
 import type { SignInReason } from '../logic/authLogic';
 
@@ -26,27 +26,38 @@ export function SessionProvider({ children }: { children: ReactNode }) {
   const userInitiated = useRef(false);
 
   useEffect(() => {
-    supabase.auth.getSession().then(({ data }) => {
-      setState((s) => (s.loaded ? s : { ...s, loaded: true, session: data.session }));
-    });
-    const { data } = supabase.auth.onAuthStateChange((event, session) => {
-      if (event === 'SIGNED_OUT') {
-        // Not started by us (refresh token revoked or expired): expiry.
-        if (!userInitiated.current) {
-          queryClient.clear();
-          setState({ loaded: true, session: null, reason: 'expired' });
+    let cancelled = false;
+    let unsubscribe: (() => void) | null = null;
+    void loadSupabase().then((supabase) => {
+      if (cancelled) return;
+      // Subscribe first so an event arriving while getSession resolves is not lost.
+      const { data } = supabase.auth.onAuthStateChange((event, session) => {
+        if (event === 'SIGNED_OUT') {
+          // Not started by us (refresh token revoked or expired): expiry.
+          if (!userInitiated.current) {
+            queryClient.clear();
+            setState({ loaded: true, session: null, reason: 'expired' });
+          }
+        } else {
+          setState((s) => ({ loaded: true, session, reason: session ? null : s.reason }));
         }
-      } else {
-        setState((s) => ({ loaded: true, session, reason: session ? null : s.reason }));
-      }
+      });
+      unsubscribe = () => data.subscription.unsubscribe();
+      void supabase.auth.getSession().then(({ data: { session } }) => {
+        if (!cancelled) setState((s) => (s.loaded ? s : { ...s, loaded: true, session }));
+      });
     });
-    return () => data.subscription.unsubscribe();
+    return () => {
+      cancelled = true;
+      unsubscribe?.();
+    };
   }, [queryClient]);
 
   const signOut = useCallback(
     async (reason: 'logout' | 'removed' | 'deleted') => {
       userInitiated.current = true;
       try {
+        const supabase = await loadSupabase();
         // After deletion the server session is already gone: sign out locally and ignore its 401/404.
         await supabase.auth.signOut(reason === 'deleted' ? { scope: 'local' } : undefined);
       } finally {
