@@ -5,7 +5,7 @@ import { lightColors } from './theme';
 
 test('renders the app name', async () => {
   await render(<HomeScreen />);
-  expect(screen.getByText('T-MEN')).toBeTruthy();
+  expect(screen.getAllByText('T-MEN').length).toBe(2);
 });
 
 test('uses the theme background', async () => {
