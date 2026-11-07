@@ -5,7 +5,7 @@
     "scheme": "aquamates",
     "version": "1.0.0",
     "plugins": ["expo-router", "expo-font"],
-    "web": { "bundler": "metro", "output": "static", "favicon": "./assets/icon.png" },
+    "web": { "bundler": "metro", "output": "static" },
     "icon": "./assets/icon.png"
   }
 }
