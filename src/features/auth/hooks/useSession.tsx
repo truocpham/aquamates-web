@@ -14,6 +14,8 @@ type SessionValue = {
   signOut: (reason: 'logout' | 'removed' | 'deleted') => Promise<void>;
 };
 
+const SESSION_TIMEOUT_MS = 5000;
+
 const SessionContext = createContext<SessionValue | null>(null);
 
 export function SessionProvider({ children }: { children: ReactNode }) {
@@ -28,27 +30,40 @@ export function SessionProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     let cancelled = false;
     let unsubscribe: (() => void) | null = null;
-    void loadSupabase().then((supabase) => {
-      if (cancelled) return;
-      // Subscribe first so an event arriving while getSession resolves is not lost.
-      const { data } = supabase.auth.onAuthStateChange((event, session) => {
-        if (event === 'SIGNED_OUT') {
-          // Not started by us (refresh token revoked or expired): expiry.
-          if (!userInitiated.current) {
-            queryClient.clear();
-            setState({ loaded: true, session: null, reason: 'expired' });
+    // Any failure (chunk fails to load, getSession rejects or hangs) resolves to signed out, so the page never stays blank.
+    const settleSignedOut = () => setState((s) => (s.loaded ? s : { ...s, loaded: true, session: null }));
+    const timer = setTimeout(settleSignedOut, SESSION_TIMEOUT_MS);
+    loadSupabase()
+      .then((supabase) => {
+        if (cancelled) return;
+        // Subscribe first so an event arriving while getSession resolves is not lost.
+        const { data } = supabase.auth.onAuthStateChange((event, session) => {
+          if (event === 'SIGNED_OUT') {
+            // Not started by us (refresh token revoked or expired): expiry.
+            if (!userInitiated.current) {
+              queryClient.clear();
+              setState({ loaded: true, session: null, reason: 'expired' });
+            }
+          } else {
+            setState((s) => ({ loaded: true, session, reason: session ? null : s.reason }));
           }
-        } else {
-          setState((s) => ({ loaded: true, session, reason: session ? null : s.reason }));
-        }
+        });
+        unsubscribe = () => data.subscription.unsubscribe();
+        return supabase.auth.getSession().then(({ data: { session } }) => {
+          if (cancelled) return;
+          clearTimeout(timer);
+          // A late result (after the timeout) still upgrades signed out to signed in, unless a sign-out or expiry happened meanwhile.
+          setState((s) => (!s.loaded || (!s.session && !s.reason && session) ? { ...s, loaded: true, session } : s));
+        });
+      })
+      .catch(() => {
+        if (cancelled) return;
+        clearTimeout(timer);
+        settleSignedOut();
       });
-      unsubscribe = () => data.subscription.unsubscribe();
-      void supabase.auth.getSession().then(({ data: { session } }) => {
-        if (!cancelled) setState((s) => (s.loaded ? s : { ...s, loaded: true, session }));
-      });
-    });
     return () => {
       cancelled = true;
+      clearTimeout(timer);
       unsubscribe?.();
     };
   }, [queryClient]);
