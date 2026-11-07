@@ -6,13 +6,14 @@ import { SignInScreen } from './components/SignInScreen';
 const mockOAuth = jest.fn();
 const mockOtp = jest.fn();
 
-jest.mock('@/shared/supabase', () => ({
-  supabase: {
+jest.mock('@/shared/lazySupabase', () => ({
+  loadSupabase: () =>
+    Promise.resolve({
     auth: {
       signInWithOAuth: (...a: unknown[]) => mockOAuth(...a),
       signInWithOtp: (...a: unknown[]) => mockOtp(...a),
     },
-  },
+    }),
 }));
 jest.mock('react-native-safe-area-context', () => ({ useSafeAreaInsets: () => ({ top: 0, bottom: 0, left: 0, right: 0 }) }));
 

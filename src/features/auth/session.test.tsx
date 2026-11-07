@@ -12,8 +12,9 @@ const mockState: { listener: Listener | null; session: unknown; signOut: jest.Mo
   signOut: jest.fn(),
 };
 
-jest.mock('@/shared/supabase', () => ({
-  supabase: {
+jest.mock('@/shared/lazySupabase', () => ({
+  loadSupabase: () =>
+    Promise.resolve({
     auth: {
       getSession: () => Promise.resolve({ data: { session: mockState.session } }),
       onAuthStateChange: (cb: Listener) => {
@@ -22,7 +23,7 @@ jest.mock('@/shared/supabase', () => ({
       },
       signOut: (...args: unknown[]) => mockState.signOut(...args),
     },
-  },
+    }),
 }));
 
 const latest: { current: ReturnType<typeof useSession> | null } = { current: null };
