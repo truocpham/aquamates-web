@@ -1,13 +1,19 @@
+import { useEffect } from 'react';
 import { View } from 'react-native';
 
 import { useSession } from '@/features/auth/hooks/useSession';
 import { LandingScreen } from '@/features/landing/LandingScreen';
 import { t } from '@/shared/i18n';
+import { clearSessionHint } from '@/shared/preHydration';
 import { Button } from '@/shared/ui';
 import { HomeScreen } from '@/shared/ui/HomeScreen';
 
 export default function Index() {
   const { status, signOut } = useSession();
+  // Once the session is known, the pre-hydration hint (see app/+html.tsx) has done its job.
+  useEffect(() => {
+    if (status !== 'loading') clearSessionHint();
+  }, [status]);
   // Signed-in members see home; everyone else (including while loading) gets the public landing page.
   if (status !== 'signedIn') return <LandingScreen />;
   return (
