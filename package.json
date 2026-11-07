@@ -10,15 +10,6 @@
     "lint": "eslint .",
     "test": "jest"
   },
-  "jest": {
-    "preset": "jest-expo",
-    "globalSetup": "./jest.global-setup.js",
-    "testPathIgnorePatterns": [
-      "/node_modules/",
-      "/e2e/",
-      "/dist/"
-    ]
-  },
   "dependencies": {
     "@expo-google-fonts/plus-jakarta-sans": "^0.4.2",
     "@expo/vector-icons": "^15.0.2",

@@ -1,3 +1,3 @@
 const expo = require('eslint-config-expo/flat');
 
-module.exports = [...expo, { ignores: ['dist/*', 'node_modules/*', 'supabase/functions/*/index.ts'] }];
+module.exports = [...expo, { ignores: ['dist/*', '.claude/*', '.lighthouseci/*', 'node_modules/*', 'supabase/functions/*/index.ts'] }];
