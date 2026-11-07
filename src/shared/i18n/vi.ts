@@ -22,7 +22,9 @@ export const vi: Record<keyof typeof en, string> = {
   'signIn.signOut': 'Đăng xuất',
   'signIn.completing': 'Đang đăng nhập...',
 
-  'landing.title': 'Câu lạc bộ của bạn, gọn gàng hơn.',
+  // Draft tagline translation, pending owner review.
+  'landing.title': 'Bơi cùng nhau, bia mãi mãi',
+  'landing.footer': 'T-MEN, ứng dụng cho câu lạc bộ bơi và buổi tụ tập.',
   'landing.subtitle': 'Lên kế hoạch buổi bơi và buổi tụ tập, theo dõi ai tham gia và chia chi phí cùng anh em.',
   'landing.cta': 'Đăng nhập',
   'landing.feature.events.title': 'Sự kiện',

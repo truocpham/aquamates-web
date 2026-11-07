@@ -3,6 +3,7 @@ import { useRouter } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { ActivityIndicator, View } from 'react-native';
 
+import { Logo, TopBar } from '@/shared/brand';
 import { t, useLanguage } from '@/shared/i18n';
 import { Button, Card, Screen, spacing, Text, TextInput } from '@/shared/ui';
 
@@ -49,7 +50,9 @@ export function ClubCodeScreen() {
   if (exists.isError) {
     return (
       <Screen>
-        <View style={centered}>
+        <TopBar />
+        <View style={[centered, { gap: spacing.xl }]}>
+          <Logo variant="full" width={150} />
           <Card style={cardStyle}>
             <Text variant="error" accessibilityRole="alert">
               {t('error.club')}
@@ -73,7 +76,9 @@ export function ClubCodeScreen() {
 
   return (
     <Screen>
-      <View style={centered}>
+      <TopBar />
+      <View style={[centered, { gap: spacing.xl }]}>
+        <Logo variant="full" width={150} />
         <Card testID={creating ? 'create-club-card' : 'join-club-card'} style={cardStyle}>
           <Text variant="title">{creating ? t('clubCode.create') : t('clubCode.enter')}</Text>
           {creating ? <Text>{t('clubCode.firstMember', { min: MIN_CODE_LENGTH })}</Text> : null}
