@@ -8,7 +8,9 @@
     "web": "expo start --web",
     "build": "expo export -p web",
     "lint": "eslint .",
-    "test": "jest"
+    "test": "jest",
+    "e2e:build": "EXPO_PUBLIC_SUPABASE_URL=https://e2e.supabase.co EXPO_PUBLIC_SUPABASE_ANON_KEY=e2e-anon-key expo export -p web --output-dir dist-e2e --clear",
+    "e2e": "npm run e2e:build && playwright test"
   },
   "dependencies": {
     "@expo-google-fonts/plus-jakarta-sans": "^0.4.2",
@@ -31,6 +33,7 @@
     "react-native-web": "^0.21.0"
   },
   "devDependencies": {
+    "@playwright/test": "^1.65.0",
     "@testing-library/react-native": "^14.1.0",
     "@types/jest": "^30.0.0",
     "@types/react": "^19.3.0",

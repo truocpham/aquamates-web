@@ -6,5 +6,5 @@
     "paths": { "@/*": ["./src/*"] }
   },
   "include": ["**/*.ts", "**/*.tsx", ".expo/types/**/*.ts", "expo-env.d.ts"],
-  "exclude": ["supabase/functions/*/index.ts", ".claude", ".lighthouseci", "node_modules", "dist"]
+  "exclude": ["dist-e2e", "supabase/functions/*/index.ts", ".claude", ".lighthouseci", "node_modules", "dist"]
 }
