@@ -11,14 +11,22 @@ export function qrFileError(f: { type: string; size: number }): TextKey | null {
   return null;
 }
 
-/** Opens the browser file picker; resolves null when the user cancels. */
-export function pickImage(): Promise<File | null> {
+/** Opens the browser file picker; resolves with the chosen file; stays pending if the user cancels. */
+export function pickImage(): Promise<File> {
   return new Promise((resolve) => {
     const input = document.createElement('input');
     input.type = 'file';
     input.accept = QR_TYPES.join(',');
-    input.onchange = () => resolve(input.files?.[0] ?? null);
-    input.oncancel = () => resolve(null);
+    // Firefox only fires change for inputs that are attached to the document.
+    input.style.display = 'none';
+    const done = (f: File) => {
+      input.remove();
+      resolve(f);
+    };
+    input.onchange = () => input.files?.[0] && done(input.files[0]);
+    // No cancel handler: Firefox can fire `cancel` before `change`, which would discard the chosen file.
+    // A cancelled picker just leaves this promise pending; nothing waits on it.
+    document.body.appendChild(input);
     input.click();
   });
 }

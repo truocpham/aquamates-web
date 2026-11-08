@@ -74,7 +74,7 @@ jobs:
 
   e2e:
     name: E2E
-    needs: build
+    needs: install
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -83,17 +83,18 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci
-      - uses: actions/download-artifact@v4
-        with:
-          name: dist
-          path: dist
+      - run: npx playwright install --with-deps chromium firefox webkit
       - name: Run e2e tests
-        run: |
-          if npm run | grep -q '^  e2e$'; then
-            npm run e2e
-          else
-            echo "No e2e script defined in package.json yet; nothing to run."
-          fi
+        # Builds its own export (npm run e2e:build) against a fake Supabase URL; the backend is mocked in the browser.
+        run: npm run e2e
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: e2e-results
+          path: |
+            e2e/results
+            playwright-report
+          retention-days: 7
 
   lighthouse:
     name: Lighthouse
