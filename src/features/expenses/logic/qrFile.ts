@@ -17,8 +17,15 @@ export function pickImage(): Promise<File | null> {
     const input = document.createElement('input');
     input.type = 'file';
     input.accept = QR_TYPES.join(',');
-    input.onchange = () => resolve(input.files?.[0] ?? null);
-    input.oncancel = () => resolve(null);
+    // Firefox only fires change for inputs that are attached to the document.
+    input.style.display = 'none';
+    const done = (f: File | null) => {
+      input.remove();
+      resolve(f);
+    };
+    input.onchange = () => done(input.files?.[0] ?? null);
+    input.oncancel = () => done(null);
+    document.body.appendChild(input);
     input.click();
   });
 }
