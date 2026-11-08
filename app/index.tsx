@@ -30,7 +30,8 @@ export default function Index() {
           <UpcomingList />
         </View>
       </HomeScreen>
-      <View style={{ position: 'absolute', top: 16, right: 16 }}>
+      <View style={{ position: 'absolute', top: 16, right: 16, flexDirection: 'row', gap: 8 }}>
+        <Button title={t('tabs.settings')} variant="secondary" onPress={() => router.push('/settings')} />
         <Button title={t('signIn.signOut')} variant="secondary" onPress={() => signOut('logout')} />
       </View>
     </View>

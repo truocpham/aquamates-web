@@ -22,6 +22,17 @@ export async function signInWithMagicLink(email: string): Promise<void> {
   if (error) throw new Error(t('signIn.magicLink.error'));
 }
 
+export async function getProfile(userId: string): Promise<{ display_name: string; avatar_url: string | null }> {
+  const { data, error } = await (await client()).from('profiles').select('display_name, avatar_url').eq('id', userId).single();
+  if (error) throw new Error(t('error.profile'));
+  return data;
+}
+
+export async function updateDisplayName(userId: string, name: string): Promise<void> {
+  const { error } = await (await client()).from('profiles').update({ display_name: name }).eq('id', userId);
+  if (error) throw new Error(t('error.saveName'));
+}
+
 export async function clubExists(): Promise<boolean> {
   const { data, error } = await (await client()).rpc('club_exists');
   if (error) throw new Error(t('error.club'));

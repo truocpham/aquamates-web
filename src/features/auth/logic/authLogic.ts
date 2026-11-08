@@ -21,6 +21,12 @@ export function parseRpcError(e: unknown): RpcError {
   return m === 'club_exists' || m === 'bad_code' || m === 'removed' || m === 'last_admin' || m === 'bad_name' ? m : 'unknown';
 }
 
+/** Trimmed display name when it is 1-50 characters, else null. */
+export function validDisplayName(input: string): string | null {
+  const name = input.trim();
+  return name.length >= 1 && name.length <= 50 ? name : null;
+}
+
 /** Trimmed email when it looks like one, else null. */
 export function validEmail(input: string): string | null {
   const email = input.trim();
