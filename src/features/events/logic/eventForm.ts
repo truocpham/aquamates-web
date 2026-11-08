@@ -40,6 +40,9 @@ export function validate(f: EventForm, now = new Date()): FormErrors {
   if (!f.title.trim()) e.title = t('form.err.title');
   if (!f.description.trim()) e.description = t('form.err.description');
   if (!f.location.trim()) e.location = t('form.err.location');
+  for (const k of Object.keys(LIMITS) as (keyof typeof LIMITS)[]) {
+    if (!e[k] && f[k].trim().length > LIMITS[k]) e[k] = t('form.err.tooLong', { max: LIMITS[k] });
+  }
   const start = parseStart(f.startsAt);
   if (!start) e.startsAt = t('form.err.startsAtFormat');
   else if (start <= now) e.startsAt = t('form.err.startsAtPast');

@@ -2,7 +2,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react-native';
 
 import { NewEventScreen } from './components/NewEventScreen';
-import { parseStart } from './logic/eventForm';
+import { LIMITS, parseStart, validate } from './logic/eventForm';
 
 const mockCreate = jest.fn();
 jest.mock('./data/eventsApi', () => ({ createEvent: (...a: unknown[]) => mockCreate(...a) }));
@@ -65,4 +65,13 @@ test('server error shown inline', async () => {
   await fireEvent.press(screen.getByText('Swimming'));
   await fireEvent.press(screen.getByText('Create event'));
   expect(await screen.findByText('Could not create the event.')).toBeTruthy();
+});
+
+test('validate enforces each limit', () => {
+  const ok = { category: 'swimming' as const, title: 't', description: 'd', location: 'l', startsAt: '2999-01-01 18:30', notes: '' };
+  expect(validate(ok)).toEqual({});
+  for (const k of ['title', 'description', 'location', 'notes'] as const) {
+    expect(validate({ ...ok, [k]: 'x'.repeat(LIMITS[k]) })[k]).toBeUndefined();
+    expect(validate({ ...ok, [k]: 'x'.repeat(LIMITS[k] + 1) })[k]).toBe(`Too long: at most ${LIMITS[k]} characters.`);
+  }
 });

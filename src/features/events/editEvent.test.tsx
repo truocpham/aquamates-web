@@ -8,6 +8,7 @@ const mockUpdate = jest.fn();
 let mockUser = 'u1';
 let mockRole: 'admin' | 'member' = 'member';
 let mockStart = '2999-01-01T18:30:00Z';
+let mockCancelled: string | null = null;
 jest.mock('expo-router', () => ({ Link: ({ children }: { children: string }) => require('react').createElement(require('react-native').Text, null, children) }));
 jest.mock('@/features/auth/hooks/useSession', () => ({
   useSession: () => ({ session: { user: { id: mockUser } } }),
@@ -19,7 +20,7 @@ jest.mock('./data/eventsApi', () => ({
   fetchEvent: () =>
     Promise.resolve({
       id: 'e1', creator_id: 'u1', category: 'swimming', title: 'Swim', description: 'Laps', location: 'Pool',
-      starts_at: mockStart, notes: null, cancelled_at: null, creator: null, rsvps: [],
+      starts_at: mockStart, notes: null, cancelled_at: mockCancelled, creator: null, rsvps: [],
     }),
   updateEvent: (...a: unknown[]) => mockUpdate(...a),
 }));
@@ -32,6 +33,7 @@ beforeEach(() => {
   mockUser = 'u1';
   mockRole = 'member';
   mockStart = '2999-01-01T18:30:00Z';
+  mockCancelled = null;
 });
 
 test('creator sees edit control; saving sends changed fields', async () => {
@@ -78,4 +80,31 @@ test('server refusal is shown', async () => {
   await screen.findByLabelText('Title');
   await fireEvent.press(screen.getByText('Save changes'));
   expect(await screen.findByText('Could not save changes.')).toBeTruthy();
+});
+
+test('cancelled event hides Edit', async () => {
+  mockCancelled = '2026-01-01T00:00:00Z';
+  await wrap(<EventDetailScreen id="e1" />);
+  await screen.findByText('Swim');
+  expect(screen.queryByText('Edit event')).toBeNull();
+});
+
+test.each([
+  ['non-manager', () => { mockUser = 'u2'; }],
+  ['started event', () => { mockStart = '2000-01-01T18:30:00Z'; }],
+  ['cancelled event', () => { mockCancelled = '2026-01-01T00:00:00Z'; }],
+])('edit screen shows no form for %s', async (_n, arrange) => {
+  arrange();
+  await wrap(<EditEventScreen id="e1" />);
+  expect(await screen.findByText(/cannot be edited/)).toBeTruthy();
+  expect(screen.queryByLabelText('Title')).toBeNull();
+});
+
+test('over-limit text is rejected beyond maxLength', async () => {
+  await wrap(<EditEventScreen id="e1" />);
+  await screen.findByLabelText('Title');
+  await fireEvent.changeText(screen.getByLabelText('Title'), 'x'.repeat(121));
+  await fireEvent.press(screen.getByText('Save changes'));
+  expect(await screen.findByText('Too long: at most 120 characters.')).toBeTruthy();
+  expect(mockUpdate).not.toHaveBeenCalled();
 });

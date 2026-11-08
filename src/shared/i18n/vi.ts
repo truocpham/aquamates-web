@@ -179,6 +179,8 @@ export const vi: Record<keyof typeof en, string> = {
   'event.cancel': 'Huỷ sự kiện',
   'event.yourRsvp': 'Phản hồi của bạn',
   'event.rsvp': 'Phản hồi: {status}',
+  'form.err.tooLong': 'Quá dài: tối đa {max} ký tự.',
+  'event.editBlocked': 'Không thể sửa sự kiện này. Chỉ người tạo hoặc quản trị viên mới sửa được sự kiện chưa bắt đầu và chưa bị huỷ.',
   'event.rsvpClosed': 'Đã đóng phản hồi.',
   'event.participants': 'Người tham gia',
   'event.noResponses': 'Chưa có phản hồi nào.',

@@ -1,3 +1,5 @@
+import { useMembership } from '@/features/auth/hooks/useMembership';
+import { useSession } from '@/features/auth/hooks/useSession';
 import { t, useLanguage } from '@/shared/i18n';
 import { Text } from '@/shared/ui';
 
@@ -10,8 +12,14 @@ export function EditEventScreen({ id, onSaved }: { id: string; onSaved?: () => v
   useLanguage();
   const { data: e, isPending, isError, error } = useEvent(id);
   const update = useUpdateEvent(id);
-  if (isPending) return <Text variant="muted">{t('common.loading')}</Text>;
+  const { session } = useSession();
+  const { data: membership, isPending: memberPending } = useMembership();
+  if (isPending || memberPending) return <Text variant="muted">{t('common.loading')}</Text>;
   if (isError) return <Text variant="error" accessibilityRole="alert">{error.message}</Text>;
+  const manager = membership?.role === 'admin' || e.creator_id === session?.user.id;
+  if (!manager || e.cancelled_at || new Date(e.starts_at) <= new Date()) {
+    return <Text variant="error" accessibilityRole="alert">{t('event.editBlocked')}</Text>;
+  }
   return (
     <EventFormView
       heading={t('form.editHeading')}
