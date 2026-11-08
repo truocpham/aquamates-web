@@ -37,8 +37,9 @@ for (const [signedIn, paths] of [[false, SIGNED_OUT], [true, SIGNED_IN]] as cons
         await mockBackend(page, signedIn);
         await page.setViewportSize({ width, height: 900 });
         await page.goto(path);
-        await page.waitForLoadState('networkidle');
-        await page.waitForTimeout(300);
+        // Fonts are registered after first paint and change text widths: measure once they are in and loaded.
+        await expect.poll(() => page.evaluate(() => document.fonts.size), { timeout: 15_000 }).toBeGreaterThanOrEqual(3);
+        await page.evaluate(() => document.fonts.ready);
         await page.screenshot({ path: info.outputPath(`${path.replace(/\W+/g, '_')}-${width}.png`), fullPage: true });
         expect(await layoutProblems(page)).toEqual([]);
       });
