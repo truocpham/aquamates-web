@@ -1,5 +1,5 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { fireEvent, render, screen } from '@testing-library/react-native';
+import { act, fireEvent, render, screen } from '@testing-library/react-native';
 
 import { setLanguage } from '@/shared/i18n';
 
@@ -77,7 +77,7 @@ test('greeting in Vietnamese', async () => {
   mockFetch.mockResolvedValue(data);
   await renderScreen();
   expect(await screen.findByText('Chào An!', {}, { timeout: 5000 })).toBeTruthy();
-  await setLanguage('en');
+  await act(() => setLanguage('en'));
 });
 
 test('no events shows the empty state with a link to events, not zero bars', async () => {
