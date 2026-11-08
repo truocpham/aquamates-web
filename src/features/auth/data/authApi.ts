@@ -50,6 +50,26 @@ export async function joinClub(code: string): Promise<void> {
   if (error) throw error;
 }
 
+export type Member = {
+  user_id: string;
+  display_name: string;
+  avatar_url: string | null;
+  role: 'admin' | 'member';
+  status: 'active' | 'removed';
+};
+
+export async function listMembers(): Promise<Member[]> {
+  const { data, error } = await (await client()).rpc('list_members');
+  if (error) throw new Error(t('error.members'));
+  return (data as Member[] | null) ?? [];
+}
+
+/** Soft removal (status becomes 'removed'); throws the raw RPC error so callers can parseRpcError it. */
+export async function removeMember(userId: string): Promise<void> {
+  const { error } = await (await client()).rpc('remove_member', { user_id: userId });
+  if (error) throw error;
+}
+
 export async function getMembership(): Promise<Membership> {
   const { data, error } = await (await client()).rpc('my_membership');
   if (error) throw new Error(t('error.membership'));

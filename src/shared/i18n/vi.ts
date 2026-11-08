@@ -113,6 +113,7 @@ export const vi: Record<keyof typeof en, string> = {
   'profile.saveName': 'Lưu tên',
   'profile.signOut': 'Đăng xuất',
 
+  'admin.blocked': 'Chỉ quản trị viên mới quản lý được thành viên.',
   'admin.members': 'Thành viên',
   'admin.removed': 'đã bị gỡ',
   'admin.role.admin': 'quản trị viên',

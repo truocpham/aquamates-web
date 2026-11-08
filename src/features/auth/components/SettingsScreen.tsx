@@ -1,5 +1,6 @@
 import { useState } from 'react';
-import { View } from 'react-native';
+import { Link } from 'expo-router';
+import { Pressable, View } from 'react-native';
 
 import { TopBar } from '@/shared/brand';
 import { setLanguage, t, useLanguage, type Language } from '@/shared/i18n';
@@ -8,7 +9,7 @@ import type { ThemeChoice } from '@/shared/ui/theme';
 
 import { useSession } from '../hooks/useSession';
 import { deleteAccount } from '../data/authApi';
-import { useProfile, useUpdateDisplayName } from '../hooks/useMembership';
+import { useMembership, useProfile, useUpdateDisplayName } from '../hooks/useMembership';
 import { deleteErrorMessage, validDisplayName } from '../logic/authLogic';
 
 const LANGUAGES: Language[] = ['en', 'vi'];
@@ -19,6 +20,7 @@ export function SettingsScreen() {
   const language = useLanguage();
   const { choice, setChoice } = useTheme();
   const profile = useProfile();
+  const membership = useMembership();
   const update = useUpdateDisplayName();
   const [draft, setDraft] = useState<string | null>(null);
   const value = draft ?? profile.data?.display_name ?? '';
@@ -61,6 +63,15 @@ export function SettingsScreen() {
               onPress={() => name && update.mutate(name, { onSuccess: () => setDraft(null) })}
             />
           </Card>
+          {membership.data?.role === 'admin' && membership.data.status === 'active' ? (
+            <Link href="/admin" asChild>
+              <Pressable accessibilityRole="link">
+                <Card>
+                  <Text variant="heading">{t('admin.members')}</Text>
+                </Card>
+              </Pressable>
+            </Link>
+          ) : null}
           <Card>
             <Text variant="muted" accessibilityRole="header">
               {t('settings.language')}
