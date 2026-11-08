@@ -1,7 +1,7 @@
 ---
 status: active
 milestone: M1
-tickets: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17]
+tickets: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 46, 49, 50]
 ---
 
 # AquaMates web
@@ -54,6 +54,8 @@ AquaMates is a club app for swimming and social events, but the only client is a
 - AC-18: Lighthouse performance on the landing page is at least 90, and CI fails below that.
 - AC-19: Playwright end-to-end tests of the main flows (sign-in, RSVP, create event, expenses) run in CI against the real build.
 - AC-20: The built site sends no requests to analytics or error-tracking services.
+- AC-21: Headings and big numbers use a rounded, playful font (Baloo 2) in light and dark, body text keeps Plus Jakarta Sans, and the Lighthouse threshold of AC-18 still passes.
+- AC-22: The dashboard is friendlier: a greeting with the member's name, rounded stat cards with an icon each, colourful bars and a cheerful empty state, using the same data as before.
 
 ## Out of scope
 
@@ -72,6 +74,7 @@ Push notifications, offline mode and installable PWA, SEO beyond the landing pag
 - 2026-11-06: Open source covers libraries and tools, not the free host. Why: open-source hosting means running a paid server.
 - 2026-11-06: Weekly keep-alive ping for Supabase. Why: free projects pause after about a week idle.
 - 2026-11-06: Jest plus Playwright; Lighthouse at least 90 on the landing page in CI. Why: QA can verify in a real browser, and speed stays measured.
+- 2026-11-08: Web may look friendlier than mobile for now (Baloo 2 headings, friendlier dashboard); mobile can copy it later. Why: owner asked for a more fun, friendly UI on web first.
 - 2026-11-06: Responsive on the latest two versions of Chrome, Safari, Firefox and Edge. Why: most members open shared links on their phone.
 - 2026-11-06: Account deletion on web for non-Apple accounts. Why: privacy right; the Apple token revoke cannot be tested on web yet.
 - 2026-11-06: Bank QR upload on web via file picker. Why: parity.
