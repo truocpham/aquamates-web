@@ -12,3 +12,9 @@ test('uses the theme background', async () => {
   await render(<HomeScreen />);
   expect(screen.getByTestId('home')).toHaveStyle({ backgroundColor: lightColors.bg });
 });
+
+test('renders children in place of the placeholder', async () => {
+  const { Text } = require('react-native');
+  await render(<HomeScreen><Text>events here</Text></HomeScreen>);
+  expect(screen.getByText('events here')).toBeTruthy();
+});
