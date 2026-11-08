@@ -82,6 +82,9 @@ export const fontFamily = {
   bold: 'PlusJakartaSans_700Bold',
 } as const;
 
+/** Baloo 2 heading families (the package covers Vietnamese, verified with fontTools). */
+export const headingFamily = { semibold: 'Baloo2_600SemiBold', bold: 'Baloo2_800ExtraBold' } as const;
+
 /** Family for a style's fontWeight (React Native needs one family per weight for custom fonts). */
 export function familyForWeight(weight: string | number | undefined): string {
   if (weight === '700' || weight === 700 || weight === 'bold' || weight === '800' || weight === '900') return fontFamily.bold;

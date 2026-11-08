@@ -3,7 +3,7 @@ import { act, render, screen } from '@testing-library/react-native';
 import * as RN from 'react-native';
 
 import { Text, ThemeProvider, darkColors, lightColors, resolveScheme, useTheme } from '.';
-import { fontFamily, familyForWeight, type ThemeChoice } from './theme';
+import { fontFamily, familyForWeight, headingFamily, type ThemeChoice } from './theme';
 
 const mockStore = new Map<string, string>();
 jest.mock('../secureStorage', () => ({
@@ -108,7 +108,7 @@ describe('ThemeProvider', () => {
 });
 
 describe('Text font', () => {
-  test('uses Plus Jakarta Sans for each weight', async () => {
+  test('uses Plus Jakarta Sans for body and Baloo 2 for headings', async () => {
     await render(
       <>
         <Text>body</Text>
@@ -117,8 +117,14 @@ describe('Text font', () => {
       </>,
     );
     expect(screen.getByText('body')).toHaveStyle({ fontFamily: fontFamily.regular });
-    expect(screen.getByText('heading')).toHaveStyle({ fontFamily: fontFamily.semibold });
-    expect(screen.getByText('title')).toHaveStyle({ fontFamily: fontFamily.bold });
+    expect(screen.getByText('heading')).toHaveStyle({ fontFamily: headingFamily.semibold });
+    expect(screen.getByText('title')).toHaveStyle({ fontFamily: headingFamily.bold });
     expect(familyForWeight(undefined)).toBe(fontFamily.regular);
+  });
+
+  test('Vietnamese headings use Baloo 2, whose package ships the vietnamese subset', async () => {
+    await render(<Text variant="heading">ệ ạ ữ</Text>);
+    expect(screen.getByText('ệ ạ ữ')).toHaveStyle({ fontFamily: headingFamily.semibold });
+    expect(require('@expo-google-fonts/baloo-2/metadata.json').subsets).toContain('vietnamese');
   });
 });
