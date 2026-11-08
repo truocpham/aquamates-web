@@ -7,4 +7,4 @@ export { Screen } from './Screen';
 export { Text } from './Text';
 export { TextInput } from './TextInput';
 export { ThemeProvider, useTheme } from './ThemeProvider';
-export { borderWidth, darkColors, fontFamily, lightColors, resolveScheme, themes, fontSize, fontWeight, opacity, radius, size, spacing } from './theme';
+export { borderWidth, darkColors, fontFamily, headingFamily, lightColors, resolveScheme, themes, fontSize, fontWeight, opacity, radius, size, spacing } from './theme';

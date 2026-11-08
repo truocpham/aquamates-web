@@ -1,3 +1,4 @@
+import { Baloo2_600SemiBold, Baloo2_800ExtraBold } from '@expo-google-fonts/baloo-2';
 import {
   PlusJakartaSans_400Regular,
   PlusJakartaSans_600SemiBold,
@@ -12,17 +13,19 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { AuthGate } from '@/features/auth/components/AuthGate';
 import { SessionProvider } from '@/features/auth/hooks/useSession';
 import { initLanguage } from '@/shared/i18n';
-import { ThemeProvider, fontFamily } from '@/shared/ui';
+import { ThemeProvider, fontFamily, headingFamily } from '@/shared/ui';
 
 const FONT_DELAY_MS = 1500;
 const FONTS = {
   [fontFamily.regular]: { uri: PlusJakartaSans_400Regular, display: FontDisplay.SWAP },
   [fontFamily.semibold]: { uri: PlusJakartaSans_600SemiBold, display: FontDisplay.SWAP },
   [fontFamily.bold]: { uri: PlusJakartaSans_700Bold, display: FontDisplay.SWAP },
+  [headingFamily.semibold]: { uri: Baloo2_600SemiBold, display: FontDisplay.SWAP },
+  [headingFamily.bold]: { uri: Baloo2_800ExtraBold, display: FontDisplay.SWAP },
 };
 
 /**
- * Loads Plus Jakarta Sans (font-display: swap) once the first paint is done, so the font files
+ * Loads Plus Jakarta Sans and Baloo 2 (font-display: swap) once the first paint is done, so the font files
  * stay off the critical path and the landing page's Lighthouse score holds. Text uses the
  * system font until the fonts arrive.
  */
