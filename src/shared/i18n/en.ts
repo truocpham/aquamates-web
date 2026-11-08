@@ -197,4 +197,6 @@ export const en = {
   'expense.qrSelected': 'QR image selected',
   'expense.qrChoose': 'Choose QR image',
   'expense.savePayment': 'Save payment details',
+  'expense.qrBadType': 'That file is not an image. Choose a PNG, JPG or WebP image.',
+  'expense.qrTooBig': 'That image is larger than 2 MB. Choose a smaller one.',
 } as const;
