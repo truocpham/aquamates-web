@@ -176,6 +176,8 @@ export const en = {
   'event.cancel': 'Cancel event',
   'event.yourRsvp': 'Your RSVP',
   'event.rsvp': 'RSVP {status}',
+  'form.err.tooLong': 'Too long: at most {max} characters.',
+  'event.editBlocked': 'This event cannot be edited. Only its creator or an admin can edit an event that has not started or been cancelled.',
   'event.rsvpClosed': 'RSVPs are closed.',
   'event.participants': 'Participants',
   'event.noResponses': 'No responses yet.',
