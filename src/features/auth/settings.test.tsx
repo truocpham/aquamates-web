@@ -15,6 +15,7 @@ jest.mock('../../shared/secureStorage', () => ({
     removeItem: async (k: string) => void mockStore.delete(k),
   },
 }));
+jest.mock('expo-router', () => ({ Link: ({ children }: { children: React.ReactElement }) => children }));
 jest.mock('react-native-safe-area-context', () => ({ useSafeAreaInsets: () => ({ top: 0, bottom: 0 }) }));
 jest.mock('./data/authApi', () => ({
   getProfile: async () => ({ display_name: 'Mia', avatar_url: null }),

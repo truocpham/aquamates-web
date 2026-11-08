@@ -110,6 +110,7 @@ export const en = {
   'profile.saveName': 'Save name',
   'profile.signOut': 'Sign out',
 
+  'admin.blocked': 'Only admins can manage members.',
   'admin.members': 'Members',
   'admin.removed': 'removed',
   'admin.role.admin': 'admin',
