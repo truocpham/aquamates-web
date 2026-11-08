@@ -3,6 +3,7 @@ import { ScrollView, View, useWindowDimensions } from 'react-native';
 
 import { useMembership } from '@/features/auth/hooks/useMembership';
 import { useSession } from '@/features/auth/hooks/useSession';
+import { ExpensePanel } from '@/features/expenses';
 import { formatDateTime, t, useLanguage } from '@/shared/i18n';
 import { Avatar, Button, Card, Chip, Text, fontFamily, fontSize, spacing, useTheme } from '@/shared/ui';
 
@@ -59,6 +60,7 @@ export function EventDetailScreen({ id }: { id: string }) {
       </View>
       {locked ? <Text variant="muted">{t('event.rsvpClosed')}</Text> : null}
       {rsvp.isError ? <Text variant="error" accessibilityRole="alert">{rsvp.error.message}</Text> : null}
+      <ExpensePanel eventId={id} creatorId={e.creator_id} going={e.rsvps.filter((r) => r.status === 'going').length} />
       <Text variant="heading">{t('event.participants')}</Text>
       <Card>
         {e.rsvps.length === 0 ? <Text variant="muted">{t('event.noResponses')}</Text> : null}

@@ -200,4 +200,6 @@ export const vi: Record<keyof typeof en, string> = {
   'expense.qrSelected': 'Đã chọn ảnh QR',
   'expense.qrChoose': 'Chọn ảnh QR',
   'expense.savePayment': 'Lưu thông tin thanh toán',
+  'expense.qrBadType': 'Tệp này không phải là ảnh. Hãy chọn ảnh PNG, JPG hoặc WebP.',
+  'expense.qrTooBig': 'Ảnh lớn hơn 2 MB. Hãy chọn ảnh nhỏ hơn.',
 };
