@@ -4,6 +4,7 @@ import { ScrollView, View } from 'react-native';
 import { t, useLanguage } from '@/shared/i18n';
 import { Button, Chip, Text, TextInput, spacing } from '@/shared/ui';
 
+import { StartField } from './StartField';
 import { CATEGORIES, LIMITS, emptyForm, validate, type EventForm } from '../logic/eventForm';
 
 type Props = {
@@ -55,7 +56,11 @@ export function EventFormView({ heading, submitLabel, initial = emptyForm, pendi
       {field('title', t('form.title'))}
       {field('description', t('form.description'), { multiline: true })}
       {field('location', t('form.location'))}
-      {field('startsAt', t('form.startsAt'), { autoCapitalize: 'none' })}
+      <View style={{ gap: spacing.xs }}>
+        <Text variant="muted">{t('form.startsAt')}</Text>
+        <StartField label={t('form.startsAt')} value={form.startsAt} onChange={set('startsAt')} />
+        {errors.startsAt ? <Text variant="error" accessibilityRole="alert">{errors.startsAt}</Text> : null}
+      </View>
       {field('notes', t('form.notes'), { multiline: true })}
       {error ? <Text variant="error" accessibilityRole="alert">{error}</Text> : null}
       {done ? <Text>{done}</Text> : null}

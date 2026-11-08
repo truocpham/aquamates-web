@@ -27,7 +27,7 @@ export function toForm(e: { category: Category; title: string; description: stri
     title: e.title,
     description: e.description ?? '',
     location: e.location ?? '',
-    startsAt: `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())}`,
+    startsAt: `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`,
     notes: e.notes ?? '',
   };
 }
@@ -44,7 +44,7 @@ export function validate(f: EventForm, now = new Date()): FormErrors {
     if (!e[k] && f[k].trim().length > LIMITS[k]) e[k] = t('form.err.tooLong', { max: LIMITS[k] });
   }
   const start = parseStart(f.startsAt);
-  if (!start) e.startsAt = t('form.err.startsAtFormat');
+  if (!start) e.startsAt = t('form.err.startsAtRequired');
   else if (start <= now) e.startsAt = t('form.err.startsAtPast');
   return e;
 }

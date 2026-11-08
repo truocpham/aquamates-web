@@ -17,7 +17,7 @@ const setup = async (onCreated = jest.fn()) => {
   );
   return onCreated;
 };
-const START = 'Start time (YYYY-MM-DD HH:mm)';
+const START = 'Start time';
 const type = (label: string, v: string) => fireEvent.changeText(screen.getByLabelText(label), v);
 const fill = async () => {
   await type('Title', 'Sunday swim');
