@@ -38,6 +38,8 @@ test('qr file limits match the bucket', () => {
   expect(qrFileError({ type: 'image/png', size: QR_MAX_BYTES })).toBeNull();
   expect(qrFileError({ type: 'image/png', size: QR_MAX_BYTES + 1 })).toBe('expense.qrTooBig');
   expect(qrFileError({ type: 'application/pdf', size: 10 })).toBe('expense.qrBadType');
+  expect(qrFileError({ type: 'image/svg+xml', size: 10 })).toBe('expense.qrBadType');
+  for (const type of ['image/jpeg', 'image/webp']) expect(qrFileError({ type, size: 10 })).toBeNull();
 });
 
 test('organizer sees total and split, and a member sees the QR', async () => {

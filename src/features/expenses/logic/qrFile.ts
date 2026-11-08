@@ -1,11 +1,12 @@
 import type { TextKey } from '@/shared/i18n';
 
-/** Same limits as the `qr` storage bucket: image/* and at most 2 MB. */
+/** Raster formats only: SVG can carry script. At most 2 MB, as the `qr` storage bucket. */
+export const QR_TYPES = ['image/png', 'image/jpeg', 'image/webp'];
 export const QR_MAX_BYTES = 2 * 1024 * 1024;
 
 /** Returns the i18n key of the problem, or null when the file is acceptable. */
 export function qrFileError(f: { type: string; size: number }): TextKey | null {
-  if (!f.type.startsWith('image/')) return 'expense.qrBadType';
+  if (!QR_TYPES.includes(f.type)) return 'expense.qrBadType';
   if (f.size > QR_MAX_BYTES) return 'expense.qrTooBig';
   return null;
 }
@@ -15,7 +16,7 @@ export function pickImage(): Promise<File | null> {
   return new Promise((resolve) => {
     const input = document.createElement('input');
     input.type = 'file';
-    input.accept = 'image/*';
+    input.accept = QR_TYPES.join(',');
     input.onchange = () => resolve(input.files?.[0] ?? null);
     input.oncancel = () => resolve(null);
     input.click();
