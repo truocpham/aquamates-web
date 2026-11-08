@@ -54,6 +54,7 @@ test('signed in: organizer sets cost, sees the split and uploads a bank QR', asy
   const chooser = page.waitForEvent('filechooser');
   await page.getByText('Choose QR image').click();
   await (await chooser).setFiles({ name: 'qr.png', mimeType: 'image/png', buffer: Buffer.from('iVBORw0KGgo=', 'base64') });
+  await expect(page.getByRole('alert')).toHaveCount(0);
   await expect(page.getByText('QR image selected')).toBeVisible();
   await page.getByRole('button', { name: 'Save payment details' }).click();
   await expect(page.getByLabel('Bank QR')).toBeVisible();
