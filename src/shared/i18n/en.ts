@@ -20,7 +20,8 @@ export const en = {
   'signIn.signOut': 'Sign out',
   'signIn.completing': 'Signing you in...',
 
-  'landing.title': 'Your club, organised.',
+  'landing.title': 'Swim together, beer forever',
+  'landing.footer': 'T-MEN, the club app for swimming and social nights.',
   'landing.subtitle': 'Plan swim sessions and social nights, track who is coming and split the costs with your mates.',
   'landing.cta': 'Sign in',
   'landing.feature.events.title': 'Events',

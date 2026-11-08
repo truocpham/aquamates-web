@@ -54,7 +54,7 @@ test('a failed import (chunk 404, offline) shows the landing and clears the hint
   await setup();
   await act(async () => {});
   expect(mockState.clear).toHaveBeenCalled();
-  expect(screen.getByText('Your club, organised.')).toBeTruthy();
+  expect(screen.getByText('Swim together, beer forever')).toBeTruthy();
 });
 
 test('a rejected getSession shows the landing and clears the hint', async () => {
@@ -62,7 +62,7 @@ test('a rejected getSession shows the landing and clears the hint', async () => 
   await setup();
   await act(async () => {});
   expect(mockState.clear).toHaveBeenCalled();
-  expect(screen.getByText('Your club, organised.')).toBeTruthy();
+  expect(screen.getByText('Swim together, beer forever')).toBeTruthy();
 });
 
 test('a hanging import resolves to signed out after the timeout', async () => {
@@ -72,7 +72,7 @@ test('a hanging import resolves to signed out after the timeout', async () => {
   expect(mockState.clear).not.toHaveBeenCalled();
   await pass(5000);
   expect(mockState.clear).toHaveBeenCalled();
-  expect(screen.getByText('Your club, organised.')).toBeTruthy();
+  expect(screen.getByText('Swim together, beer forever')).toBeTruthy();
 });
 
 test('a hanging getSession resolves to signed out after the timeout', async () => {
@@ -82,7 +82,7 @@ test('a hanging getSession resolves to signed out after the timeout', async () =
   expect(mockState.clear).not.toHaveBeenCalled();
   await pass(5000);
   expect(mockState.clear).toHaveBeenCalled();
-  expect(screen.getByText('Your club, organised.')).toBeTruthy();
+  expect(screen.getByText('Swim together, beer forever')).toBeTruthy();
 });
 
 test('a session that arrives after the timeout still switches to signed in', async () => {
@@ -91,11 +91,11 @@ test('a session that arrives after the timeout still switches to signed in', asy
   await setup();
   await act(async () => {});
   await pass(5000);
-  expect(screen.getByText('Your club, organised.')).toBeTruthy();
+  expect(screen.getByText('Swim together, beer forever')).toBeTruthy();
   await act(async () => {
     resolve({ data: { session: { user: { id: 'u1' } } } });
   });
-  expect(screen.queryByText('Your club, organised.')).toBeNull();
+  expect(screen.queryByText('Swim together, beer forever')).toBeNull();
   expect(mockState.clear).toHaveBeenCalled();
 });
 
@@ -109,6 +109,6 @@ test('a late session does not override an expiry that happened meanwhile', async
   await act(async () => {
     resolve({ data: { session: { user: { id: 'u1' } } } });
   });
-  expect(screen.getByText('Your club, organised.')).toBeTruthy();
+  expect(screen.getByText('Swim together, beer forever')).toBeTruthy();
   expect(mockState.clear).toHaveBeenCalled();
 });

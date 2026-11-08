@@ -7,7 +7,7 @@ jest.mock('expo-router', () => ({ useRouter: () => ({ push: mockPush }) }));
 
 test('shows the pitch and features', async () => {
   await render(<LandingScreen />);
-  expect(screen.getByText('Your club, organised.')).toBeTruthy();
+  expect(screen.getByText('Swim together, beer forever')).toBeTruthy();
   expect(screen.getByText('Events')).toBeTruthy();
   expect(screen.getByText('Expenses')).toBeTruthy();
   expect(screen.getByText('History')).toBeTruthy();

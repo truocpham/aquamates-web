@@ -66,6 +66,18 @@ describe('ThemeProvider', () => {
     expect(await screen.findByText('light:system:#FBF8E5')).toBeTruthy();
   });
 
+  test('on web a dark phone still ends up dark once the saved choice is read', async () => {
+    const original = RN.Platform.OS;
+    RN.Platform.OS = 'web';
+    try {
+      phoneSpy.mockReturnValue('dark');
+      await render(<ThemeProvider><Probe /></ThemeProvider>);
+      expect(await screen.findByText('dark:system:#071820')).toBeTruthy();
+    } finally {
+      RN.Platform.OS = original;
+    }
+  });
+
   test('a saved choice overrides the phone', async () => {
     mockStore.set('aquamates.theme', 'dark');
     phoneSpy.mockReturnValue('light');

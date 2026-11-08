@@ -2,6 +2,7 @@ import { useMutation } from '@tanstack/react-query';
 import { useState } from 'react';
 import { View } from 'react-native';
 
+import { Logo, TopBar } from '@/shared/brand';
 import { t, useLanguage } from '@/shared/i18n';
 import { Button, Screen, spacing, Text, TextInput } from '@/shared/ui';
 
@@ -25,11 +26,12 @@ export function SignInScreen({ reason }: { reason?: string }) {
 
   return (
     <Screen>
+      <TopBar />
       <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
         <View style={{ width: '100%', maxWidth: 400, gap: spacing.lg }}>
-          <Text variant="title" style={{ textAlign: 'center' }}>
-            AquaMates
-          </Text>
+          <View style={{ alignItems: 'center', paddingBottom: spacing.lg }}>
+            <Logo variant="full" width={150} />
+          </View>
           {message ? (
             <Text variant="error" accessibilityRole="alert">
               {message}

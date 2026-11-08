@@ -9,7 +9,8 @@ html{background-color:${lightColors.bg}}
 @media (prefers-color-scheme:dark){html{background-color:${darkColors.bg}}}
 html[data-theme=light]{background-color:${lightColors.bg}}
 html[data-theme=dark]{background-color:${darkColors.bg}}
-html[data-has-session] [data-testid="landing"]{display:none}`;
+html[data-has-session] [data-testid="landing"]{display:none}
+@media (max-width:767px){html [data-testid="top-bar-wordmark"]{display:none}}`;
 
 /** Static HTML template: the signed-out landing is prerendered into it; the inline script runs before first paint. */
 export default function Root({ children }: { children: ReactNode }) {
