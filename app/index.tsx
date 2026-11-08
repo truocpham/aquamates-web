@@ -24,6 +24,7 @@ export default function Index() {
       <HomeScreen>
         <View style={{ flex: 1, gap: spacing.md, padding: spacing.lg, width: '100%', maxWidth: 1100, alignSelf: 'center' }}>
           <View style={{ flexDirection: 'row', justifyContent: 'flex-end', gap: spacing.sm }}>
+            <Button title={t('tabs.dashboard')} variant="secondary" onPress={() => router.push('/dashboard')} />
             <Button title={t('tabs.history')} variant="secondary" onPress={() => router.push('/history')} />
             <Button title={t('home.newEvent')} onPress={() => router.push('/event/new')} />
           </View>
