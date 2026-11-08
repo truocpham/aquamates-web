@@ -1,5 +1,7 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { fireEvent, render, screen } from '@testing-library/react-native';
+import { act, fireEvent, render, screen } from '@testing-library/react-native';
+
+import { setLanguage } from '@/shared/i18n';
 
 import { DashboardScreen } from './DashboardScreen';
 import { computeParticipation } from './logic/participation';
@@ -12,6 +14,9 @@ jest.mock('@/shared/lazySupabase', () => ({
     from: () => ({ select: () => ({ is: () => ({ lte: async () => ({ data: await mockFetch(), error: null }) }) }) }),
   }),
 }));
+const mockPush = jest.fn();
+jest.mock('expo-router', () => ({ useRouter: () => ({ push: mockPush }) }));
+jest.mock('@/features/auth/hooks/useMembership', () => ({ useProfile: () => ({ data: { display_name: 'An' } }) }));
 jest.mock('@/features/auth/hooks/useSession', () => ({ useSession: () => ({ session: { user: { id: 'me' } } }) }));
 
 const ev = (
@@ -52,9 +57,36 @@ test('screen shows totals', async () => {
       <DashboardScreen />
     </QueryClientProvider>,
   );
-  expect(await screen.findByText('Swimming events: 2', {}, { timeout: 5000 })).toBeTruthy();
-  expect(screen.getByText('Beer & Social events: 2')).toBeTruthy();
-  expect(screen.getByText('Events you attended: 2')).toBeTruthy();
+  expect(await screen.findByText('Swimming events', {}, { timeout: 5000 })).toBeTruthy();
+  expect(screen.getByText('Beer & Social events')).toBeTruthy();
+  expect(screen.getByText('Events you attended')).toBeTruthy();
+  expect(screen.getAllByText('2')).toHaveLength(3);
+  expect(screen.getByText('Hi, An!')).toBeTruthy();
+  expect(screen.getByText('Events joined so far: 2. Keep it up!')).toBeTruthy();
+});
+
+const renderScreen = () =>
+  render(
+    <QueryClientProvider client={new QueryClient({ defaultOptions: { queries: { retry: false } } })}>
+      <DashboardScreen />
+    </QueryClientProvider>,
+  );
+
+test('greeting in Vietnamese', async () => {
+  await setLanguage('vi');
+  mockFetch.mockResolvedValue(data);
+  await renderScreen();
+  expect(await screen.findByText('Chào An!', {}, { timeout: 5000 })).toBeTruthy();
+  await act(() => setLanguage('en'));
+});
+
+test('no events shows the empty state with a link to events, not zero bars', async () => {
+  mockFetch.mockResolvedValue([]);
+  await renderScreen();
+  expect(await screen.findByText('No swims yet', {}, { timeout: 5000 })).toBeTruthy();
+  expect(screen.queryByText('Participation')).toBeNull();
+  await fireEvent.press(screen.getByText('See events'));
+  expect(mockPush).toHaveBeenCalledWith('/');
 });
 
 describe('participation', () => {
