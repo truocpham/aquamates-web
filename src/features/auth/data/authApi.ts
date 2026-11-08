@@ -55,3 +55,16 @@ export async function getMembership(): Promise<Membership> {
   if (error) throw new Error(t('error.membership'));
   return ((data as NonNullable<Membership>[] | null) ?? [])[0] ?? null;
 }
+
+/** Calls the delete-account Edge Function (no Apple code on web). Throws Error(code) with the function's `error` code, or 'unknown'. */
+export async function deleteAccount(): Promise<void> {
+  const { error } = await (await client()).functions.invoke('delete-account', { body: {} });
+  if (!error) return;
+  let code = 'unknown';
+  try {
+    code = (await (error as { context?: Response }).context?.json())?.error ?? 'unknown';
+  } catch {
+    // network failure or a non-JSON body
+  }
+  throw new Error(code);
+}

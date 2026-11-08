@@ -19,9 +19,13 @@ jest.mock('react-native-safe-area-context', () => ({ useSafeAreaInsets: () => ({
 jest.mock('./data/authApi', () => ({
   getProfile: async () => ({ display_name: 'Mia', avatar_url: null }),
   updateDisplayName: (id: string, n: string) => mockUpdate(id, n),
+  deleteAccount: () => mockDelete(),
 }));
+const mockSignOut = jest.fn(async (_r: string) => {});
+let mockIdentities: { provider: string }[] = [{ provider: 'facebook' }];
+const mockDelete = jest.fn(async () => {});
 jest.mock('./hooks/useSession', () => ({
-  useSession: () => ({ status: 'signedIn', session: { user: { id: 'u1' } }, signOut: jest.fn() }),
+  useSession: () => ({ status: 'signedIn', session: { user: { id: 'u1', identities: mockIdentities } }, signOut: mockSignOut }),
 }));
 
 jest.setTimeout(30000);
@@ -36,6 +40,8 @@ const setup = async () =>
   );
 
 beforeEach(async () => {
+  mockIdentities = [{ provider: 'facebook' }];
+  jest.clearAllMocks();
   mockStore.clear();
   await setLanguage('en');
 });
@@ -66,4 +72,37 @@ it('switches theme and persists it', async () => {
   await setup();
   await fireEvent.press(await screen.findByText('Dark'));
   await waitFor(() => expect(mockStore.get('aquamates.theme')).toBe('dark'));
+});
+
+it('asks for confirmation, then deletes and signs out as deleted', async () => {
+  await setup();
+  await fireEvent.press(await screen.findByText('Delete my account'));
+  expect(mockDelete).not.toHaveBeenCalled();
+  await fireEvent.press(screen.getByText('Delete account'));
+  await waitFor(() => expect(mockSignOut).toHaveBeenCalledWith('deleted'));
+  expect(mockDelete).toHaveBeenCalledTimes(1);
+});
+
+it('cancelling the confirmation deletes nothing', async () => {
+  await setup();
+  await fireEvent.press(await screen.findByText('Delete my account'));
+  await fireEvent.press(screen.getByText('Cancel'));
+  expect(mockDelete).not.toHaveBeenCalled();
+  expect(screen.getByText('Delete my account')).toBeTruthy();
+});
+
+it('shows the last-admin error and stays signed in', async () => {
+  mockDelete.mockRejectedValueOnce(new Error('last_admin'));
+  await setup();
+  await fireEvent.press(await screen.findByText('Delete my account'));
+  await fireEvent.press(screen.getByText('Delete account'));
+  expect(await screen.findByText('You are the last admin. Promote someone first.')).toBeTruthy();
+  expect(mockSignOut).not.toHaveBeenCalled();
+});
+
+it('tells an Apple-linked member to delete in the iOS app', async () => {
+  mockIdentities = [{ provider: 'apple' }];
+  await setup();
+  expect(await screen.findByText(/Delete it in the T-MEN iOS app/)).toBeTruthy();
+  expect(screen.queryByText('Delete my account')).toBeNull();
 });

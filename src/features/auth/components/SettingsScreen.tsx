@@ -6,8 +6,10 @@ import { setLanguage, t, useLanguage, type Language } from '@/shared/i18n';
 import { Button, Card, Chip, Screen, Text, TextInput, spacing, useTheme } from '@/shared/ui';
 import type { ThemeChoice } from '@/shared/ui/theme';
 
+import { useSession } from '../hooks/useSession';
+import { deleteAccount } from '../data/authApi';
 import { useProfile, useUpdateDisplayName } from '../hooks/useMembership';
-import { validDisplayName } from '../logic/authLogic';
+import { deleteErrorMessage, validDisplayName } from '../logic/authLogic';
 
 const LANGUAGES: Language[] = ['en', 'vi'];
 const THEMES: ThemeChoice[] = ['system', 'light', 'dark'];
@@ -21,6 +23,24 @@ export function SettingsScreen() {
   const [draft, setDraft] = useState<string | null>(null);
   const value = draft ?? profile.data?.display_name ?? '';
   const name = validDisplayName(value);
+  const { session, signOut } = useSession();
+  const [confirming, setConfirming] = useState(false);
+  const [deleting, setDeleting] = useState(false);
+  const [deleteError, setDeleteError] = useState<string | null>(null);
+  const apple = !!session?.user.identities?.some((i) => i.provider === 'apple');
+
+  const remove = async () => {
+    setDeleting(true);
+    setDeleteError(null);
+    try {
+      await deleteAccount();
+    } catch (e) {
+      setDeleteError(deleteErrorMessage(e instanceof Error ? e.message : ''));
+      setDeleting(false);
+      return;
+    }
+    await signOut('deleted');
+  };
 
   return (
     <View testID="settings" style={{ flex: 1 }}>
@@ -60,6 +80,24 @@ export function SettingsScreen() {
                 <Chip key={c} label={t(`settings.theme.${c}`)} selected={choice === c} onPress={() => void setChoice(c)} />
               ))}
             </View>
+          </Card>
+          <Card>
+            <Text variant="muted" accessibilityRole="header">
+              {t('settings.account')}
+            </Text>
+            {apple ? (
+              <Text>{t('profile.delete.apple')}</Text>
+            ) : confirming ? (
+              <>
+                <Text accessibilityRole="header">{t('profile.delete.title')}</Text>
+                <Text>{t('profile.delete.message')}</Text>
+                {deleteError ? <Text variant="error">{deleteError}</Text> : null}
+                <Button title={t('profile.delete.confirm')} variant="danger" disabled={deleting} onPress={() => void remove()} />
+                <Button title={t('common.cancel')} variant="secondary" disabled={deleting} onPress={() => setConfirming(false)} />
+              </>
+            ) : (
+              <Button title={t('profile.delete.start')} variant="danger" onPress={() => setConfirming(true)} />
+            )}
           </Card>
         </View>
       </Screen>

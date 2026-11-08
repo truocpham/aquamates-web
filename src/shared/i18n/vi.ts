@@ -105,6 +105,8 @@ export const vi: Record<keyof typeof en, string> = {
   'profile.delete.message':
     "Thông tin đăng nhập của bạn sẽ bị xoá và tên của bạn sẽ thành 'Deleted member'. Phản hồi tham gia, sự kiện và tổng chi phí của bạn vẫn nằm trong thống kê của câu lạc bộ; thông tin thanh toán và ảnh QR trên các sự kiện bạn tổ chức sẽ bị xoá. Hành động này không thể hoàn tác.",
   'profile.delete.confirm': 'Xoá tài khoản',
+  'profile.delete.start': 'Xoá tài khoản của tôi',
+  'profile.delete.apple': 'Tài khoản của bạn được liên kết với Đăng nhập với Apple. Hãy xoá trong ứng dụng T-MEN trên iOS.',
   'profile.editName': 'Sửa tên',
   'profile.nameLabel': 'Tên hiển thị',
   'profile.nameInvalid': 'Tên phải có từ 1 đến 50 ký tự.',
