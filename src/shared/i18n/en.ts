@@ -102,6 +102,8 @@ export const en = {
   'profile.delete.message':
     "Your login is removed and your name becomes 'Deleted member'. Your RSVPs, events and cost totals stay in the club statistics; payment details and QR images on events you organised are removed. This cannot be undone.",
   'profile.delete.confirm': 'Delete account',
+  'profile.delete.start': 'Delete my account',
+  'profile.delete.apple': 'Your account is linked to Sign in with Apple. Delete it in the T-MEN iOS app.',
   'profile.editName': 'Edit name',
   'profile.nameLabel': 'Display name',
   'profile.nameInvalid': 'Name must be 1-50 characters.',

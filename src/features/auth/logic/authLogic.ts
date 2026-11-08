@@ -5,6 +5,11 @@ export type Membership = { role: 'admin' | 'member'; status: 'active' | 'removed
 
 const SIGN_IN_REASONS: string[] = ['expired', 'logout', 'failed', 'removed', 'deleted'];
 
+/** Message for a delete-account failure; `code` is the Edge Function error. */
+export function deleteErrorMessage(code: string): string {
+  return code === 'last_admin' ? t('error.lastAdmin') : t('error.deleteFailed');
+}
+
 export function reasonMessage(reason: string | undefined): string | null {
   return reason && SIGN_IN_REASONS.includes(reason) ? t(`signIn.reason.${reason as SignInReason}`) : null;
 }
