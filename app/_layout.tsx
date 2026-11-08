@@ -11,6 +11,7 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 import { AuthGate } from '@/features/auth/components/AuthGate';
 import { SessionProvider } from '@/features/auth/hooks/useSession';
+import { initLanguage } from '@/shared/i18n';
 import { ThemeProvider, fontFamily } from '@/shared/ui';
 
 const FONT_DELAY_MS = 1500;
@@ -35,6 +36,7 @@ function useDeferredFonts() {
 
 export default function RootLayout() {
   useDeferredFonts();
+  useEffect(() => void initLanguage(), []);
   const [queryClient] = useState(() => new QueryClient());
   return (
     <SafeAreaProvider>
